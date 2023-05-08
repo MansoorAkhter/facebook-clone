@@ -81,7 +81,7 @@ router.put("/:id/follow", async (req, res) => {
 
             if (!user.followers.includes(req.body.userId)) {
                 await user.updateOne({ $push: { followers: req.body.userId } });
-                await currentUser.updateOne({ $push: { followings: req.body.userId } });
+                await currentUser.updateOne({ $push: { followings: req.params.id } });
                 res.status(200).json("user has been followed")
             } else {
                 res.status(403).json("You already followed this user")
@@ -99,8 +99,31 @@ router.put("/:id/follow", async (req, res) => {
 
 
 
-// router.p()
+
 // Unfollow a User
+router.put("/:id/unfollow", async (req, res) => {
+    if (req.body.id !== req.params.id) {
+        try {
+            const user = await User.findById(req.params.id);
+            const currentUser = await User.findById(req.body.userId);
+
+            if (user.followers.includes(req.body.userId)) {
+                await user.updateOne({ $pull: { followers: req.body.userId } });
+                await currentUser.updateOne({ $pull: { followings: req.params.id } });
+                res.status(200).json("user has been unfollowed")
+            } else {
+                res.status(403).json("You dont followed this user")
+            }
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    } else {
+        return res.status(403).json("You cant unfollow yourself");
+    }
+});
+
+
+
 
 router.get("/", (req, res) => {
     res.send("User Route")
