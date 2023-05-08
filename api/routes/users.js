@@ -49,12 +49,13 @@ router.delete("/:id", async (req, res) => {
 
 
 
-
 // Get a User
 router.get("/:id", async (req, res) => {
     try {
-        const user = await User.findOne(req.params.id)
-        res.status(200).json(user)
+        const user = await User.findById(req.params.id);
+        // pasword & updatedAt removed into api
+        const { password, updatedAt, ...other } = user._doc
+        res.status(200).json(other)
     } catch (err) {
         res.status(500).json(err);
     }
@@ -63,6 +64,7 @@ router.get("/:id", async (req, res) => {
 
 
 // Follow a User
+// router.p()
 // Unfollow a User
 
 router.get("/", (req, res) => {
