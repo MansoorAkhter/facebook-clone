@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const bcrypt = require("bcrypt");
 const Post = require("../models/Post");
 const User = require("../models/User");
 
@@ -87,14 +86,11 @@ router.get("/:id", async (req, res) => {
 
 
 
-// Get timeline Post
+// Get timeline Posts
 router.get("/timeline/all", async (req, res) => {
-    console.log("=====***====TIMELINE=====***=====");
     try {
         const currentUser = await User.findById(req.body.userId);
         const userPosts = await Post.find({ userId: currentUser._id });
-        console.log("=========TIMELINE==========");
-
 
         const friendPosts = await Promise.all(
             currentUser.followings.map((friendId) => {
