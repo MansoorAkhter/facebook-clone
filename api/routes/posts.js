@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const Post = require("../models/Post");
+const User = require("../models/User");
 
 
 // Create Post
@@ -48,7 +49,7 @@ router.delete("/:id", async (req, res) => {
     } catch (error) {
         res.status(500).json(error)
     }
-})
+});
 
 
 
@@ -68,7 +69,7 @@ router.post("/:id/like", async (req, res) => {
         res.status(500).json(error)
     }
 
-})
+});
 
 
 
@@ -81,16 +82,19 @@ router.get("/:id", async (req, res) => {
     } catch (error) {
         res.status(500).json(error)
     }
-})
+});
 
 
 
 
 // Get timeline Post
 router.get("/timeline/all", async (req, res) => {
+    console.log("=====***====TIMELINE=====***=====");
     try {
         const currentUser = await User.findById(req.body.userId);
         const userPosts = await Post.find({ userId: currentUser._id });
+        console.log("=========TIMELINE==========");
+
 
         const friendPosts = await Promise.all(
             currentUser.followings.map((friendId) => {
@@ -102,7 +106,6 @@ router.get("/timeline/all", async (req, res) => {
         res.status(500).json(err)
     }
 });
-
 
 
 module.exports = router
