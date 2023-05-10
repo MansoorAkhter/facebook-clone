@@ -57,6 +57,19 @@ router.delete("/:conversationId", async (req, res) => {
 
 
 
+
+// get all conversation
+router.get("/allconversations/:userId", async (req, res) => {
+    try {
+        const conversations = await Conversation.find({ members: req.params.userId });
+        res.status(200).json(conversations);
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+});
+
+
 module.exports = router;
 
 
