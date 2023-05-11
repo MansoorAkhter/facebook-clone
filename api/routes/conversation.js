@@ -2,6 +2,8 @@ const router = require("express").Router();
 const Conversation = require("../models/Conversation");
 const User = require("../models/User");
 
+
+
 // new conversation
 router.post("/", async (req, res) => {
     const newConversation = new Conversation({
@@ -40,7 +42,7 @@ router.delete("/:conversationId", async (req, res) => {
     const conversation = await Conversation.findById(req.params.conversationId);
     const member = await Conversation.find(req.body.members);
     const findUser = await User.findById(req.body.userId);
-    const authUser = member[0].members.find(i => findUser._id.equals(i));
+    const authUser = member[0]?.members.find(i => findUser?._id.equals(i));
 
     try {
         if (authUser) {
